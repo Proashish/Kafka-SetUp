@@ -1,9 +1,27 @@
-Got it bro ✅
-I’ll prepare a clean **README.md** style setup guide for Kafka on AWS EC2 with your exact steps. You can drop it inside your project so that anyone can reproduce the setup.
-
 # 🚀 Kafka on AWS EC2 Setup Guide
 
-This guide explains how to install and configure **Apache Kafka 3.9.1** on an AWS EC2 instance and connect it with a Spring Boot application.
+This guide explains how to **launch an EC2 instance** and install/configure **Apache Kafka 3.9.1** on it, then connect it with a Spring Boot application.
+
+---
+
+## ✅ 0. Launch AWS EC2 Instance
+
+1. Login to your **AWS Management Console**.
+2. Go to **EC2 → Launch Instance**.
+3. **Choose AMI**: Select **Ubuntu Server (latest LTS)**.
+4. **Choose Instance Type**: Select **t2.medium** (recommended for Kafka).
+5. Configure **Key Pair** (to SSH into the instance).
+6. Configure **Security Group**:
+
+   * Allow **SSH (22)** from your IP.
+   * Allow **TCP 9092** (Kafka) from your client IP (or `0.0.0.0/0` for testing).
+   * Allow **TCP 2181** (Zookeeper) if needed.
+7. Click **Launch Instance**.
+8. After launch, go to **Instances → Connect**, copy the SSH command, and connect:
+
+   ```bash
+   ssh -i your-key.pem ubuntu@<EC2_PUBLIC_IP>
+   ```
 
 ---
 
@@ -119,13 +137,13 @@ spring.kafka.consumer.properties.spring.json.trusted.packages=*
 
 ## ✅ 10. Verify Setup
 
-* Produce a message:
+* **Produce a message**:
 
 ```bash
 bin/kafka-console-producer.sh --broker-list ec2-13-232-203-118.ap-south-1.compute.amazonaws.com:9092 --topic send-email
 ```
 
-* Consume messages:
+* **Consume messages**:
 
 ```bash
 bin/kafka-console-consumer.sh --bootstrap-server ec2-13-232-203-118.ap-south-1.compute.amazonaws.com:9092 --topic send-email --from-beginning
@@ -134,6 +152,3 @@ bin/kafka-console-consumer.sh --bootstrap-server ec2-13-232-203-118.ap-south-1.c
 ---
 
 🎉 **Kafka is now running on AWS EC2 and ready to integrate with your Spring Boot app.**
-
-Do you also want me to add **systemd service setup** (so Kafka and Zookeeper auto-start when EC2 reboots)?
-
